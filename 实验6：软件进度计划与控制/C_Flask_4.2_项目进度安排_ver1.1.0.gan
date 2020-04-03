@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?><project name="2020软件工程综合实验C组" company="北京航空航天大学" webLink="" view-date="2020-03-01" view-index="0" gantt-divider-location="878" resource-divider-location="300" version="2.8.10" locale="zh_CN">
     <description/>
     <view zooming-state="default:6" id="gantt-chart">
-        <field id="tpd10" name="序号" width="40" order="0"/>
-        <field id="tpd3" name="名称" width="234" order="1"/>
-        <field id="tpd9" name="前置任务" width="64" order="2"/>
-        <field id="tpd13" name="资源" width="243" order="3"/>
-        <field id="tpd4" name="开始日期" width="113" order="4"/>
-        <field id="tpd5" name="结束日期" width="105" order="5"/>
-        <field id="tpd6" name="持续" width="60" order="6"/>
-        <timeline><![CDATA[2,1]]></timeline>
+        <field id="tpd10" name="序号" width="42" order="0"/>
+        <field id="tpd3" name="名称" width="236" order="1"/>
+        <field id="tpd9" name="前置任务" width="66" order="2"/>
+        <field id="tpd13" name="资源" width="245" order="3"/>
+        <field id="tpd4" name="开始日期" width="115" order="4"/>
+        <field id="tpd5" name="结束日期" width="107" order="5"/>
+        <field id="tpd6" name="持续" width="63" order="6"/>
+        <timeline><![CDATA[1,2]]></timeline>
     </view>
     <view id="resource-table">
         <field id="0" name="名称" width="210" order="0"/>
@@ -509,6 +509,7 @@
                 <customproperty taskproperty-id="tpc199" value="0.0"/>
             </task>
             <task id="9" name="需求说明书撰写" color="#8cb6ce" meeting="false" start="2020-03-22" duration="5" complete="100" thirdDate="2020-03-24" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
+                <depend id="12" type="2" difference="0" hardness="Rubber"/>
                 <customproperty taskproperty-id="tpc150" value="false"/>
                 <customproperty taskproperty-id="tpc151" value="false"/>
                 <customproperty taskproperty-id="tpc152" value="false"/>
@@ -1033,6 +1034,7 @@
             <customproperty taskproperty-id="tpc198" value="0.0"/>
             <customproperty taskproperty-id="tpc199" value="0.0"/>
             <task id="19" name="软件项目进度追踪的计划" color="#8cb6ce" meeting="false" start="2020-03-09" duration="4" complete="100" thirdDate="2020-03-23" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
+                <depend id="20" type="1" difference="0" hardness="Rubber"/>
                 <customproperty taskproperty-id="tpc150" value="false"/>
                 <customproperty taskproperty-id="tpc151" value="false"/>
                 <customproperty taskproperty-id="tpc152" value="false"/>
@@ -1189,6 +1191,7 @@
             <customproperty taskproperty-id="tpc198" value="0.0"/>
             <customproperty taskproperty-id="tpc199" value="0.0"/>
             <task id="22" name="配置管理计划" color="#8cb6ce" meeting="false" start="2020-03-09" duration="5" complete="100" thirdDate="2020-03-20" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
+                <depend id="23" type="1" difference="0" hardness="Rubber"/>
                 <customproperty taskproperty-id="tpc150" value="false"/>
                 <customproperty taskproperty-id="tpc151" value="false"/>
                 <customproperty taskproperty-id="tpc152" value="false"/>
@@ -1345,6 +1348,7 @@
             <customproperty taskproperty-id="tpc198" value="0.0"/>
             <customproperty taskproperty-id="tpc199" value="0.0"/>
             <task id="25" name="项目分析计划" color="#8cb6ce" meeting="false" start="2020-03-09" duration="4" complete="100" thirdDate="2020-03-20" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
+                <depend id="26" type="1" difference="0" hardness="Rubber"/>
                 <customproperty taskproperty-id="tpc150" value="false"/>
                 <customproperty taskproperty-id="tpc151" value="false"/>
                 <customproperty taskproperty-id="tpc152" value="false"/>

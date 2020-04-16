@@ -8,7 +8,7 @@
         <field id="tpd4" name="开始日期" width="113" order="4"/>
         <field id="tpd5" name="结束日期" width="105" order="5"/>
         <field id="tpd6" name="持续" width="62" order="6"/>
-        <timeline><![CDATA[2,1]]></timeline>
+        <timeline><![CDATA[1,2]]></timeline>
     </view>
     <view id="resource-table">
         <field id="0" name="名称" width="210" order="0"/>
@@ -510,6 +510,7 @@
             </task>
             <task id="9" name="需求说明书撰写" color="#8cb6ce" meeting="false" start="2020-03-22" duration="5" complete="100" thirdDate="2020-03-24" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
                 <depend id="12" type="2" difference="0" hardness="Rubber"/>
+                <depend id="57" type="2" difference="0" hardness="Rubber"/>
                 <customproperty taskproperty-id="tpc150" value="false"/>
                 <customproperty taskproperty-id="tpc151" value="false"/>
                 <customproperty taskproperty-id="tpc152" value="false"/>
@@ -828,7 +829,7 @@
             <task id="28" name="需求评审第一轮" color="#8cb6ce" meeting="false" start="2020-04-05" duration="5" complete="0" thirdDate="2020-03-05" thirdDate-constraint="0" expand="true"/>
             <task id="55" name="需求评审第二轮" color="#8cb6ce" meeting="false" start="2020-04-12" duration="5" complete="0" thirdDate="2020-03-01" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="15" name="软件设计与实现" color="#8cb6ce" meeting="false" start="2020-04-05" duration="6" complete="0" thirdDate="2020-04-20" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
+        <task id="15" name="软件设计与实现" color="#8cb6ce" meeting="false" start="2020-04-05" duration="36" complete="0" thirdDate="2020-04-20" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
             <customproperty taskproperty-id="tpc150" value="false"/>
             <customproperty taskproperty-id="tpc151" value="false"/>
             <customproperty taskproperty-id="tpc152" value="false"/>
@@ -879,7 +880,10 @@
             <customproperty taskproperty-id="tpc197" value="0.0"/>
             <customproperty taskproperty-id="tpc198" value="0.0"/>
             <customproperty taskproperty-id="tpc199" value="0.0"/>
-            <task id="57" name="设计文档初稿撰写" color="#8cb6ce" meeting="false" start="2020-04-05" duration="6" complete="0" thirdDate="2020-03-01" thirdDate-constraint="0" expand="true"/>
+            <task id="57" name="设计文档初稿撰写" color="#8cb6ce" meeting="false" start="2020-04-05" duration="6" complete="0" thirdDate="2020-03-01" thirdDate-constraint="0" expand="true">
+                <depend id="58" type="2" difference="0" hardness="Rubber"/>
+            </task>
+            <task id="58" name="代码实现" color="#8cb6ce" meeting="false" start="2020-04-13" duration="28" complete="0" thirdDate="2020-03-01" thirdDate-constraint="0" expand="true"/>
         </task>
         <task id="16" name="软件测试需求分析" color="#8cb6ce" meeting="false" start="2020-05-11" duration="7" complete="0" thirdDate="2020-05-11" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
             <customproperty taskproperty-id="tpc150" value="false"/>
@@ -1542,18 +1546,21 @@
         <allocation task-id="12" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="34" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="57" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="58" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="2" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="8" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="11" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="12" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="34" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="57" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="58" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="2" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="8" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="11" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="12" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="34" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="57" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="58" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="2" resource-id="5" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="3" resource-id="5" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="5" resource-id="5" function="Default:0" responsible="false" load="100.0"/>
@@ -1570,11 +1577,13 @@
         <allocation task-id="12" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="34" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="57" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="58" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="2" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="8" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="11" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="12" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="57" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="58" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
     </allocations>
     <vacations/>
     <previous>
@@ -1583,7 +1592,7 @@
             <previous-task id="2" start="2020-03-06" duration="1" meeting="false" super="false"/>
             <previous-task id="5" start="2020-03-09" duration="3" meeting="false" super="false"/>
             <previous-task id="3" start="2020-03-10" duration="2" meeting="false" super="false"/>
-            <previous-task id="4" start="2020-03-13" duration="3" meeting="false" super="false"/>
+            <previous-task id="4" start="2020-03-13" duration="5" meeting="false" super="false"/>
             <previous-task id="6" start="2020-03-17" duration="2" meeting="false" super="false"/>
             <previous-task id="7" start="2020-03-21" duration="13" meeting="false" super="true"/>
             <previous-task id="8" start="2020-03-21" duration="1" meeting="false" super="false"/>
@@ -1595,8 +1604,11 @@
             <previous-task id="51" start="2020-04-02" duration="1" meeting="false" super="false"/>
             <previous-task id="13" start="2020-03-30" duration="18" meeting="false" super="true"/>
             <previous-task id="14" start="2020-03-30" duration="4" meeting="false" super="false"/>
-            <previous-task id="28" start="2020-04-06" duration="11" meeting="false" super="false"/>
-            <previous-task id="15" start="2020-04-09" duration="31" meeting="false" super="false"/>
+            <previous-task id="28" start="2020-04-05" duration="5" meeting="false" super="false"/>
+            <previous-task id="55" start="2020-04-12" duration="5" meeting="false" super="false"/>
+            <previous-task id="15" start="2020-04-05" duration="36" meeting="false" super="true"/>
+            <previous-task id="57" start="2020-04-05" duration="6" meeting="false" super="false"/>
+            <previous-task id="58" start="2020-04-13" duration="28" meeting="false" super="false"/>
             <previous-task id="16" start="2020-05-11" duration="7" meeting="false" super="false"/>
             <previous-task id="17" start="2020-05-18" duration="15" meeting="false" super="false"/>
             <previous-task id="50" start="2020-06-02" duration="11" meeting="false" super="false"/>

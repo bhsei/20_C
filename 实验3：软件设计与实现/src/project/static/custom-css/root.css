@@ -1,0 +1,38 @@
+.splash-container{
+    background: #31708f;
+}
+.pure-menu-item{
+    text-transform: uppercase;
+}
+.home-menu a{
+    text-decoration: unset;
+}
+#login-button, #regist-button{
+    background-color: white;
+    color: #1f8dd6;
+    font-weight: bold;
+}
+.form-item {
+    display: flex;
+}
+.form-item label{
+    width: 20%;
+    color: beige;
+}
+.error-info{
+    margin-top: -5px;
+    margin-bottom: -5px;
+    display: flex;
+    padding-left: 20%;
+}
+.error-info .error-text{
+    list-style-type: none;
+    padding-left: 5px;
+    margin-top: 0px;
+    color: brown;
+    font-size: small;
+    font-weight: bold;
+}
+.error-info i{
+    color: brown;
+}

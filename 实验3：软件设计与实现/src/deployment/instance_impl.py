@@ -12,10 +12,9 @@ TORCH_TEMPLATE_DIR = "/root/model_deployment/model_template/torch"
 CPKT_TEMPLATE_DIR = "/root/model_deployment/model_template/cpkt"
 PB_TEMPLATE_DIR = "/root/model_deployment/model_template/pb"
 H5_TEMPLATE_DIR = "/root/model_deployment/model_template/h5"
-INSTANCE_NUM_LIMIT_MODEL = 3
-INSTANCE_NUM_LIMIT_USER = 10
 SERVER_MEM = 2000
-MEM_LIMIT_INSTACE = 512
+MEM_LIMIT_INSTACE_PROGRAM = 512
+MEM_LIMIT_INSTACE_USER = 2560
 
 def get_insnum_by_model_id(par):
     return 1
@@ -67,7 +66,18 @@ def getRC(log_path):
 
     return return_code
 
-def deploy_impl(model_id):
+def memoryCheck(pid_list, limit):
+    _sum = 0.
+    for _pid in pid_list:
+        mem_line = os.popen("ps aux | grep "+str(_pid)).readlines()[0]
+        mem_arr = re.split(" {1,10}",mem_line)[3]
+        mem_float = float(mem_arr)
+        _sum += mem_float
+    if _sum/100*SERVER_MEM >= limit:
+        return False
+    return True
+
+def deploy_impl(model_id, model_settings_file_path):
     # torch模型所需参数：端口、模型路径、模型图文件（拷贝至flask文件夹下）
     # cpkt模型所需参数：端口、模型文件夹、模型图文件、（输入节点名、输出节点名）
     # pb模型所需参数：端口、模型路径、（输入节点名、输出节点名）
@@ -80,8 +90,7 @@ def deploy_impl(model_id):
     }
 
     ### get conf ###
-    # conf_path = get_conf_file_by_model(model_id)
-    conf_path = "/root/model_deployment/config.yml"
+    conf_path = model_settings_file_path
     try:
         conf_file = open(conf_path, 'r', encoding="utf-8")
         conf = yaml.load(conf_file.read(), Loader=yaml.FullLoader)
@@ -232,23 +241,22 @@ def deploy_impl(model_id):
 
     return result
 
-def deploy(model_id, user_id):
-    current_instance_under_model = get_insnum_by_model_id(model_id)
-    if current_instance_under_model >= INSTANCE_NUM_LIMIT_MODEL:
-        return 4037
-    current_instance_under_user = get_insnum_by_user_id(user_id)
-    if current_instance_under_user >= INSTANCE_NUM_LIMIT_USER:
-        return 4037
-    deploy_result = deploy_impl(model_id)
+def deploy(model_id, model_settings_file_path, user_pid_list, program_pid_list):
+    if not memoryCheck(user_pid_list, MEM_LIMIT_INSTACE_USER) or not memoryCheck(program_pid_list, MEM_LIMIT_INSTACE_PROGRAM):
+        return 4038
+
+    deploy_result = deploy_impl(model_id, model_settings_file_path)
+    ### 生成实例前的内存限制 传入参数：用户下的pid list 和 该模型所属项目下的pid list ###
     try:
         int(deploy_result)
         return deploy_result
     except:
+        ### 生成实例后的内存限制####
         pid = deploy_result["pid"]
-        mem_line = os.popen("ps aux | grep "+str(pid)).readlines()[0]
-        mem_arr = re.split(" {1,10}",mem_line)[3]
-        mem_float = float(mem_arr)
-        if mem_float/100*SERVER_MEM >= MEM_LIMIT_INSTACE:
+        new_user_pid_list = user_pid_list.append(pid)
+        new_prog_pid_list = program_pid_list.append(pid)
+        if not memoryCheck(new_user_pid_list, MEM_LIMIT_INSTACE_USER) or not memoryCheck(new_prog_pid_list, MEM_LIMIT_INSTACE_PROGRAM):
+            delete(pid)
             return 4038
         else:
             return deploy_result
@@ -288,7 +296,9 @@ def restart(pid, port):
 
 
 if __name__ == "__main__":
-    print(deploy(3,123))
+    user_pid_list = []
+    program_pid_list = []
+    print(deploy(3,"/root/model_deployment/config.yml", user_pid_list, program_pid_list))
     #delete(2405)
     #pause(2450, 11477)
     #restart(2450, 11477)

@@ -12,12 +12,12 @@ TORCH_TEMPLATE_DIR = "/root/model_deployment/model_template/torch"
 CPKT_TEMPLATE_DIR = "/root/model_deployment/model_template/cpkt"
 PB_TEMPLATE_DIR = "/root/model_deployment/model_template/pb"
 H5_TEMPLATE_DIR = "/root/model_deployment/model_template/h5"
-INSTANCE_NUM_LIMIT_PROGRAM = 3
+INSTANCE_NUM_LIMIT_MODEL = 3
 INSTANCE_NUM_LIMIT_USER = 10
 SERVER_MEM = 2000
 MEM_LIMIT_INSTACE = 512
 
-def get_insnum_by_program_id(par):
+def get_insnum_by_model_id(par):
     return 1
     pass
 
@@ -67,7 +67,7 @@ def getRC(log_path):
 
     return return_code
 
-def deploy_impl(program_id):
+def deploy_impl(model_id):
     # torch模型所需参数：端口、模型路径、模型图文件（拷贝至flask文件夹下）
     # cpkt模型所需参数：端口、模型文件夹、模型图文件、（输入节点名、输出节点名）
     # pb模型所需参数：端口、模型路径、（输入节点名、输出节点名）
@@ -80,7 +80,7 @@ def deploy_impl(program_id):
     }
 
     ### get conf ###
-    # conf_path = get_conf_file_by_program(program_id)
+    # conf_path = get_conf_file_by_model(model_id)
     conf_path = "/root/model_deployment/config.yml"
     try:
         conf_file = open(conf_path, 'r', encoding="utf-8")
@@ -93,8 +93,8 @@ def deploy_impl(program_id):
 
     if MODEL_TYPE == "TORCH":
         model_path, model_graph_file_path = conf[MODEL_TYPE]['model_path'], conf[MODEL_TYPE]['model_graph_file_path']
-        program_folder = "program_" + str(program_id) + "_" + str(int(time.time()))
-        new_folder = os.path.join("instance", program_folder)
+        model_folder = "model_" + str(model_id) + "_" + str(int(time.time()))
+        new_folder = os.path.join("instance", model_folder)
         os.popen("cp -r " + TORCH_TEMPLATE_DIR + " " + new_folder)
         time.sleep(1)
         os.popen("cp " + model_graph_file_path + " " + new_folder)
@@ -103,8 +103,8 @@ def deploy_impl(program_id):
         ### start deploy ###
         flask_run_file = str(os.path.join("/", "root", "model_deployment", new_folder, "model.py"))
         instance = os.popen("nohup python " + flask_run_file + " " + str(
-            port) + " " + model_path + " >" + program_folder + "_nohup_process.log &")
-        rc = getRC(program_folder + "_nohup_process.log")
+            port) + " " + model_path + " >" + model_folder + "_nohup_process.log &")
+        rc = getRC(model_folder + "_nohup_process.log")
         print("RC", rc)
         if rc == 1:
             os.popen("rm -rf " + new_folder)
@@ -129,8 +129,8 @@ def deploy_impl(program_id):
                                                                                   'model_graph_file_path'], \
                                                                               conf[MODEL_TYPE]['input_node_name'], \
                                                                               conf[MODEL_TYPE]['output_node_name']
-        program_folder = "program_" + str(program_id) + "_" + str(int(time.time()))
-        new_folder = os.path.join("instance", program_folder)
+        model_folder = "model_" + str(model_id) + "_" + str(int(time.time()))
+        new_folder = os.path.join("instance", model_folder)
         os.popen("cp -r " + CPKT_TEMPLATE_DIR + " " + new_folder)
         time.sleep(1)
         # TODO: 异常处理 return 4036
@@ -142,8 +142,8 @@ def deploy_impl(program_id):
         if output_node_name == None:
             output_node_name = ""
         instance = os.popen("nohup python " + flask_run_file + " " + str(
-            port) + " " + model_dir + " " + model_graph_file_path + " " + input_node_name + " " + output_node_name + " >" + program_folder + "_nohup_process.log &")
-        rc = getRC(program_folder + "_nohup_process.log")
+            port) + " " + model_dir + " " + model_graph_file_path + " " + input_node_name + " " + output_node_name + " >" + model_folder + "_nohup_process.log &")
+        rc = getRC(model_folder + "_nohup_process.log")
         print("RC", rc)
         if rc == 1:
             os.popen("rm -rf " + new_folder)
@@ -165,8 +165,8 @@ def deploy_impl(program_id):
         model_path, input_node_name, output_node_name = conf[MODEL_TYPE]['model_path'], \
                                                         conf[MODEL_TYPE]['input_node_name'], \
                                                         conf[MODEL_TYPE]['output_node_name']
-        program_folder = "program_" + str(program_id) + "_" + str(int(time.time()))
-        new_folder = os.path.join("instance", program_folder)
+        model_folder = "model_" + str(model_id) + "_" + str(int(time.time()))
+        new_folder = os.path.join("instance", model_folder)
         os.popen("cp -r " + PB_TEMPLATE_DIR + " " + new_folder)
         time.sleep(1)
         # TODO: 异常处理 return 4036
@@ -178,8 +178,8 @@ def deploy_impl(program_id):
         if output_node_name == None:
             output_node_name = ""
         instance = os.popen("nohup python4tf1 " + flask_run_file + " " + str(
-            port) + " " + model_path + " "  + input_node_name + " " + output_node_name + " >" + program_folder + "_nohup_process.log &")
-        rc = getRC(program_folder + "_nohup_process.log")
+            port) + " " + model_path + " "  + input_node_name + " " + output_node_name + " >" + model_folder + "_nohup_process.log &")
+        rc = getRC(model_folder + "_nohup_process.log")
         print("RC", rc)
         if rc == 1:
             os.popen("rm -rf " + new_folder)
@@ -199,8 +199,8 @@ def deploy_impl(program_id):
             result["url"] = base_url + str(port) + "/run_model/"
     elif MODEL_TYPE == "H5":
         model_path = conf[MODEL_TYPE]['model_path']
-        program_folder = "program_" + str(program_id) + "_" + str(int(time.time()))
-        new_folder = os.path.join("instance", program_folder)
+        model_folder = "model_" + str(model_id) + "_" + str(int(time.time()))
+        new_folder = os.path.join("instance", model_folder)
         os.popen("cp -r " + H5_TEMPLATE_DIR + " " + new_folder)
         time.sleep(1)
         # TODO: 异常处理 return 4036
@@ -208,8 +208,8 @@ def deploy_impl(program_id):
         ### start deploy ###
         flask_run_file = str(os.path.join("/", "root", "model_deployment", new_folder, "model.py"))
         instance = os.popen("nohup python " + flask_run_file + " " + str(
-            port) + " " + model_path  + " >" + program_folder + "_nohup_process.log &")
-        rc = getRC(program_folder + "_nohup_process.log")
+            port) + " " + model_path  + " >" + model_folder + "_nohup_process.log &")
+        rc = getRC(model_folder + "_nohup_process.log")
         print("RC", rc)
         if rc == 1:
             os.popen("rm -rf " + new_folder)
@@ -232,14 +232,14 @@ def deploy_impl(program_id):
 
     return result
 
-def deploy(program_id, user_id):
-    current_instance_under_program = get_insnum_by_program_id(program_id)
-    if current_instance_under_program >= INSTANCE_NUM_LIMIT_PROGRAM:
+def deploy(model_id, user_id):
+    current_instance_under_model = get_insnum_by_model_id(model_id)
+    if current_instance_under_model >= INSTANCE_NUM_LIMIT_MODEL:
         return 4037
     current_instance_under_user = get_insnum_by_user_id(user_id)
     if current_instance_under_user >= INSTANCE_NUM_LIMIT_USER:
         return 4037
-    deploy_result = deploy_impl(program_id)
+    deploy_result = deploy_impl(model_id)
     try:
         int(deploy_result)
         return deploy_result

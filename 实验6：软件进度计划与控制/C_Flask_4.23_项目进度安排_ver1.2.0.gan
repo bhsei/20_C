@@ -897,7 +897,7 @@
             </task>
             <task id="60" name="模块间调试" color="#8cb6ce" meeting="false" start="2020-05-09" duration="6" complete="0" thirdDate="2020-03-01" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="16" name="软件测试需求分析" color="#8cb6ce" meeting="false" start="2020-05-10" duration="13" complete="0" thirdDate="2020-05-11" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
+        <task id="16" name="软件测试需求分析" color="#8cb6ce" meeting="false" start="2020-05-10" duration="15" complete="0" thirdDate="2020-05-11" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
             <customproperty taskproperty-id="tpc150" value="false"/>
             <customproperty taskproperty-id="tpc151" value="false"/>
             <customproperty taskproperty-id="tpc152" value="false"/>
@@ -948,12 +948,12 @@
             <customproperty taskproperty-id="tpc197" value="0.0"/>
             <customproperty taskproperty-id="tpc198" value="0.0"/>
             <customproperty taskproperty-id="tpc199" value="0.0"/>
-            <task id="75" name="软件测试需求规格说明书编写" color="#8cb6ce" meeting="false" start="2020-05-10" duration="6" complete="0" thirdDate="2020-03-22" thirdDate-constraint="0" expand="true">
+            <task id="75" name="软件测试需求规格说明书编写" color="#8cb6ce" meeting="false" start="2020-05-10" duration="9" complete="0" thirdDate="2020-03-22" thirdDate-constraint="0" expand="true">
                 <depend id="76" type="2" difference="0" hardness="Rubber"/>
             </task>
-            <task id="76" name="软件测试" color="#8cb6ce" meeting="false" start="2020-05-17" duration="6" complete="0" thirdDate="2020-03-22" thirdDate-constraint="0" expand="true"/>
+            <task id="76" name="软件测试" color="#8cb6ce" meeting="false" start="2020-05-19" duration="6" complete="0" thirdDate="2020-03-22" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="17" name="软件测试评审" color="#8cb6ce" meeting="false" start="2020-05-23" duration="10" complete="0" thirdDate="2020-05-18" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
+        <task id="17" name="软件测试评审" color="#8cb6ce" meeting="false" start="2020-05-23" duration="12" complete="0" thirdDate="2020-05-18" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
             <customproperty taskproperty-id="tpc150" value="false"/>
             <customproperty taskproperty-id="tpc151" value="false"/>
             <customproperty taskproperty-id="tpc152" value="false"/>
@@ -1005,8 +1005,9 @@
             <customproperty taskproperty-id="tpc198" value="0.0"/>
             <customproperty taskproperty-id="tpc199" value="0.0"/>
         </task>
-        <task id="50" name="综合实验分析与总结" color="#8cb6ce" meeting="false" start="2020-06-02" duration="11" complete="0" thirdDate="2020-03-01" thirdDate-constraint="0" expand="true"/>
-        <task id="18" name="软件项目计划与监控" color="#000000" meeting="false" start="2020-03-09" duration="96" complete="4" expand="true" cost-manual-value="0.0" cost-calculated="false">
+        <task id="89" name="软件演示与测评" color="#8cb6ce" meeting="false" start="2020-06-05" duration="8" complete="0" thirdDate="2020-03-22" thirdDate-constraint="0" expand="true"/>
+        <task id="50" name="综合实验分析与总结" color="#8cb6ce" meeting="false" start="2020-06-16" duration="8" complete="0" thirdDate="2020-03-01" thirdDate-constraint="0" expand="true"/>
+        <task id="18" name="软件项目计划与监控" color="#000000" meeting="false" start="2020-03-09" duration="107" complete="3" expand="true" cost-manual-value="0.0" cost-calculated="false">
             <customproperty taskproperty-id="tpc150" value="false"/>
             <customproperty taskproperty-id="tpc151" value="false"/>
             <customproperty taskproperty-id="tpc152" value="false"/>
@@ -1110,7 +1111,7 @@
                 <customproperty taskproperty-id="tpc198" value="0.0"/>
                 <customproperty taskproperty-id="tpc199" value="0.0"/>
             </task>
-            <task id="20" name="软件项目进度追踪" color="#8cb6ce" meeting="false" start="2020-03-09" duration="96" complete="0" thirdDate="2020-03-16" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
+            <task id="20" name="软件项目进度追踪" color="#8cb6ce" meeting="false" start="2020-03-09" duration="107" complete="0" thirdDate="2020-03-16" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
                 <customproperty taskproperty-id="tpc150" value="false"/>
                 <customproperty taskproperty-id="tpc151" value="false"/>
                 <customproperty taskproperty-id="tpc152" value="false"/>
@@ -1163,7 +1164,7 @@
                 <customproperty taskproperty-id="tpc199" value="0.0"/>
             </task>
         </task>
-        <task id="21" name="配置管理" color="#000000" meeting="false" start="2020-03-09" duration="96" complete="4" expand="true" cost-manual-value="0.0" cost-calculated="false">
+        <task id="21" name="配置管理" color="#000000" meeting="false" start="2020-03-09" duration="107" complete="4" expand="true" cost-manual-value="0.0" cost-calculated="false">
             <customproperty taskproperty-id="tpc150" value="false"/>
             <customproperty taskproperty-id="tpc151" value="false"/>
             <customproperty taskproperty-id="tpc152" value="false"/>
@@ -1267,7 +1268,7 @@
                 <customproperty taskproperty-id="tpc198" value="0.0"/>
                 <customproperty taskproperty-id="tpc199" value="0.0"/>
             </task>
-            <task id="23" name="配置管理追踪" color="#8cb6ce" meeting="false" start="2020-03-09" duration="96" complete="0" thirdDate="2020-03-16" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
+            <task id="23" name="配置管理追踪" color="#8cb6ce" meeting="false" start="2020-03-09" duration="107" complete="0" thirdDate="2020-03-16" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
                 <customproperty taskproperty-id="tpc150" value="false"/>
                 <customproperty taskproperty-id="tpc151" value="false"/>
                 <customproperty taskproperty-id="tpc152" value="false"/>
@@ -1320,7 +1321,7 @@
                 <customproperty taskproperty-id="tpc199" value="0.0"/>
             </task>
         </task>
-        <task id="24" name="软件工程实验追踪与分析" color="#000000" meeting="false" start="2020-03-09" duration="96" complete="4" expand="true" cost-manual-value="0.0" cost-calculated="false">
+        <task id="24" name="软件工程实验追踪与分析" color="#000000" meeting="false" start="2020-03-09" duration="107" complete="3" expand="true" cost-manual-value="0.0" cost-calculated="false">
             <customproperty taskproperty-id="tpc150" value="false"/>
             <customproperty taskproperty-id="tpc151" value="false"/>
             <customproperty taskproperty-id="tpc152" value="false"/>
@@ -1424,7 +1425,7 @@
                 <customproperty taskproperty-id="tpc198" value="0.0"/>
                 <customproperty taskproperty-id="tpc199" value="0.0"/>
             </task>
-            <task id="26" name="项目统计数据搜集" color="#8cb6ce" meeting="false" start="2020-03-09" duration="96" complete="0" thirdDate="2020-03-16" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
+            <task id="26" name="项目统计数据搜集" color="#8cb6ce" meeting="false" start="2020-03-09" duration="107" complete="0" thirdDate="2020-03-16" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
                 <customproperty taskproperty-id="tpc150" value="false"/>
                 <customproperty taskproperty-id="tpc151" value="false"/>
                 <customproperty taskproperty-id="tpc152" value="false"/>

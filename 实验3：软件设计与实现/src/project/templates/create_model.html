@@ -1,0 +1,231 @@
+{% extends 'template.html' %}
+
+{% block import %}
+<link rel="stylesheet" href="/static/bootstrap-select/dist/css/bootstrap-select.min.css">
+<script src="{{ url_for('static', filename = 'bootstrap-select/dist/js/bootstrap-select.js') }}"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/fileinput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/locales/zh.js"></script>
+<style>
+    .content-inner {
+        display: flex;
+    }
+    label.required:before {
+        content: '* ';
+        color: red;
+    }
+    .has-feedback label~.form-control-feedback {
+        top: 32px;
+    }
+    .operate-button {
+        margin-bottom: 4%;
+    }
+
+    .operate-button button {
+        display: flex;
+        float: right;
+        margin-right: 5px;
+    }
+
+    .form-error {
+        color: darkred;
+        font-size: smaller;
+    }
+
+    .sp-circle {
+        display: none;
+        width: 28px;
+        height: 28px;
+        border: 4px rgba(0, 0, 0, 0.25) solid;
+        border-top: 4px black solid;
+        border-radius: 50%;
+        -webkit-animation: spCircRot .6s infinite linear;
+        animation: spCircRot .6s infinite linear;
+    }
+
+    @-webkit-keyframes spCircRot {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+        to {
+            -webkit-transform: rotate(359deg);
+        }
+    }
+
+    @keyframes spCircRot {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(359deg);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content_head %} 导入模型 {% endblock %}
+{% block content_inner %}
+<form style="width: 60%">
+    <div class="form-group">
+        <label class="required" for="model-name">名称</label>
+        <input type="text" class="form-control" id="model-name" placeholder="必填：模型名称" required>
+    </div>
+    <div class="form-group">
+        <label class="required" for="model-type">类型</label>
+        <select class="form-control selectpicker" data-live-search="true" id="model-type" title="选择：模型类型">
+            <option>深度学习模型1</option>
+            <option>深度学习模型2</option>
+            <option>深度学习模型3</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <div style="display: flex; justify-content: space-between;">
+            <label class="required" for="model-version">
+                版本&nbsp;
+                <span id="remark" style="font-size: small;"></span>
+            </label>
+            <div class="sp sp-circle" id="load"></div>
+        </div>
+        <input type="text" class="form-control" id="model-version" placeholder="填写模型名称后自动生成" readonly="readonly"
+               style="background: white">
+    </div>
+    <div class="form-group">
+        <label class="required" for="model-file">文件</label>
+        <input type="file" class="form-control" id="model-file" required>
+    </div>
+    <div class="form-group">
+        <label for="model-description">描述</label>
+        <textarea class="form-control" rows="5" id="model-description" placeholder="模型描述"></textarea>
+    </div>
+
+    <div class="operate-button">
+        <button type="button" class="btn btn-primary create" disabled="disabled">导入</button>
+        <button type="button" class="btn btn-default cancel">取消</button>
+    </div>
+</form>
+<!-- 转圈动画 -->
+<div id="loading" class="submit_loading" style="display:none">
+    <div class="loading_show">
+        <img src="/static/image/loading.gif">
+        <p class="loading_context">正在导入模型，请稍候。。。</p>
+    </div>
+</div>
+<script>
+    let nav_list = ['首页', '项目', '查看项目', '导入模型'];
+    let href_list = ['/project/', '/project/', document.referrer];
+    let error_msg = '';
+    $(function () {
+        load_nav(nav_list, href_list);
+        $("#model-file").fileinput({
+            language: 'zh',
+            showPreview: false,
+            showUpload: false
+        });
+    });
+    /** 文本框.change **/
+    $("#model-name").change(function () {
+        $.ajax({
+            type: "POST",
+            data: {'flag': 0, 'name': document.getElementById('model-name').value},
+            dataType: 'json',
+            beforeSend: function () {
+                $('#load').show();
+            },
+            success: function (data) {
+                $('#load').hide();
+                console.log(data);
+                let version = data['version'];
+                $('#model-version').val(version);
+                let remark;
+                let color;
+                if (version == '1.0') {
+                    remark = '(新的模型名称,版本号初始化为1.0)';
+                    color = '#3c763d';
+                } else {
+                    remark = '(模型名称已存在,版本号递增至' + version + ')';
+                    color = '#8a6d3b';
+                }
+                $('#remark').html(remark);
+                $('#remark').css('color', color);
+            }
+        });
+    });
+    /** 文本框.blur **/
+    $("#model-name").blur(function () {
+        clear_error_feedback(this, 'div.form-group');
+        let value = $(this).val().trim();
+        if (value == "") {
+            error_msg = "不可为空";
+            set_error_feedback(this, 'div.form-group', error_msg);
+        }
+    });
+    /** 选择框and文本框and文件框.change **/
+    $("#model-name, #model-type, #model-version, #model-file").on('change', function () {
+        clear_error_feedback(this, 'div.form-group');
+        button_disable_or_not();
+    });
+    $('.cancel').click(function () {
+        window.history.back(-1);
+    });
+    $('.create').click(function () {
+        // 检查 模型类型
+        let type = document.getElementById('model-type');
+        if (type.value == '') {
+            clear_error_feedback(type, 'div.form-group');
+            error_msg = '请选择模型类型';
+            set_error_feedback(type, 'div.form-group', error_msg);
+            return ;
+        }
+        // 检查 模型文件
+        let file = document.getElementById('model-file');
+        if(file.files.length == 0){
+            clear_error_feedback(file, 'div.form-group');
+            error_msg = '请上传模型文件';
+            set_error_feedback(file, 'div.form-group', error_msg);
+            return ;
+        }
+        // 开始传递表单内容
+        let name = document.getElementById('model-name');
+        let version = document.getElementById('model-version');
+        let description = document.getElementById('model-description');
+        let upload_data = new FormData();
+        upload_data.append('name', name.value);
+        upload_data.append('type', type.value);
+        upload_data.append('version', version.value);
+        upload_data.append('description', description.value);
+        upload_data.append('file', file.files[0]);
+        //var request = new XMLHttpRequest();
+        //request.open("POST", "");
+        //request.send(upload_data);
+        $.ajax({
+            type: "POST",
+            data: upload_data,
+            dataType: 'json',
+            processData:false,  //tell jQuery not to process the data
+            contentType: false,  //tell jQuery not to set contentType
+            beforeSend:function () {
+                $('#loading').show();
+            },
+            success:function(data){
+                $('#loading').hide();
+                if (data['code'] == 1000) {
+                    window.location = '/model/view/' + data['msg'];
+                    // alert('导入成功');
+                } else {
+                    alert('导入失败');
+                }
+            }
+        });
+    });
+
+    /** 确定按钮 disable or not **/
+    function button_disable_or_not() {
+        if ($('#model-name').val().trim() == '' || $('#model-version').val().trim() == ''
+            || $('#model-type').val().trim() == '' || $('#model-file')[0].files.length == 0)
+            $('.create').attr('disabled', true);
+        else
+            $('.create').attr('disabled', false);
+    }
+</script>
+{% endblock %}

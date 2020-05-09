@@ -1,0 +1,197 @@
+{% extends 'template.html' %}
+
+{% block import %}
+<link rel="stylesheet" href="/static/bootstrap-select/dist/css/bootstrap-select.min.css">
+<script src="{{ url_for('static', filename = 'bootstrap-select/dist/js/bootstrap-select.js') }}"></script>
+<style>
+    label.required:before {
+        content: '* ';
+        color: red;
+    }
+    .has-feedback label~.form-control-feedback {
+        top: 32px;
+    }
+    .operate-button {
+        margin-top: 4%;
+        margin-bottom: 4%;
+    }
+
+    .operate-button button {
+        display: flex;
+        float: right;
+        margin-right: 5px;
+    }
+
+    .form-error {
+        color: darkred;
+        font-size: smaller;
+    }
+
+    div.form-inline div.radio.radio-no {
+        margin-left: 5%;
+        width: 15%;
+    }
+
+    div.form-inline div.input-group {
+        width: 45%;
+    }
+</style>
+{% endblock %}
+
+{% block content_head %} 设置部署参数 {% endblock %}
+{% block content_inner %}
+<form style="width: 60%">
+    <!--div class="form-group">
+        <label class="required" for="model-version">模型版本</label>
+        <select class="form-control selectpicker" data-live-search="true" id="model-version" title="选择：模型版本">
+            <option>1.0</option>
+            <option>2.0</option>
+            <option>3.0</option>
+        </select>
+    </div-->
+
+    <div class="form-group">
+        <label class="required" for="model-env">网络服务运行环境</label>
+        <select class="form-control selectpicker" data-live-search="true" id="model-env" title="选择：网络服务运行环境">
+            <option>环境1</option>
+            <option>环境2</option>
+            <option>环境3</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="required" for="model-env">预留CPU</label>
+        <div class="form-inline">
+            <div class="radio radio-no">
+                <label>
+                    <input type="radio" name="cpu" id="cpu-no" value="no" checked>
+                    不需要
+                </label>
+            </div>
+            <div class="radio radio-yes">
+                <label>
+                    <input type="radio" name="cpu" id="cpu-yes" value="yes">
+                    需要，填写CPU个数：
+                </label>
+            </div>
+            <div class="input-group">
+                <input type="text" class="form-control" id="model-cpu" placeholder="请填写预留CPU个数"
+                       oninput="value=value.replace(/[^\d]/g,'')" disabled required>
+                <span class="input-group-addon">个</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="required" for="model-mem">预留内存</label>
+        <div class="form-inline">
+            <div class="radio radio-no">
+                <label>
+                    <input type="radio" name="mem" id="mem-no" value="no" checked>
+                    不需要
+                </label>
+            </div>
+            <div class="radio radio-yes">
+                <label>
+                    <input type="radio" name="mem" id="mem-yes" value="yes">
+                    需要，填写内存大小：
+                </label>
+            </div>
+            <div class="input-group">
+                <input type="text" class="form-control" id="model-mem" placeholder="请填写预留内存大小"
+                       oninput="value=value.replace(/[^\d]/g,'')" disabled required>
+                <span class="input-group-addon">MB</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="operate-button">
+        <button type="button" class="btn btn-primary create" disabled="disabled">确定</button>
+        <button type="button" class="btn btn-default cancel">取消</button>
+    </div>
+</form>
+<!-- 转圈动画 -->
+<div id="loading" class="submit_loading" style="display:none">
+    <div class="loading_show">
+        <img src="/static/image/loading.gif">
+        <p class="loading_context">正在设置部署参数，请稍候。。。</p>
+    </div>
+</div>
+<script>
+    let nav_list = ['首页', '项目', '查看项目', '查看模型', '设置部署参数'];
+    let href_list = ['/project/', '/project/', '#', '#'];
+    $(function () {
+        load_nav(nav_list, href_list);
+    });
+    /** 单选框.change **/
+    $('input[name=cpu], input[name=mem]').change(function () {
+        if (this.value == 'yes') {
+            $(this.closest('div.form-inline').querySelector('input[type=text]')).attr('disabled', false);
+        } else if (this.value == 'no') {
+            $(this.closest('div.form-inline').querySelector('input[type=text]')).attr('disabled', true);
+        } else {
+            alert('input radio value error.');
+        }
+        button_disable_or_not();
+    });
+    /** 选择框and文本框.change **/
+    $('#model-env, #model-cpu, #model-mem').on('change', function () {
+        clear_error_feedback(this, 'div.form-group');
+        button_disable_or_not();
+    });
+    $('.cancel').click(function () {
+        window.history.back(-1);
+    });
+    $('.create').click(function () {
+        // 检查 网络服务运行环境
+        let env = document.getElementById('model-env');
+        if (env.value == '') {
+            clear_error_feedback(env, 'div.form-group');
+            error_msg = '请选择网络服务运行环境';
+            set_error_feedback(env, 'div.form-group', error_msg);
+            return;
+        }
+        // 开始传递表单内容
+        let cpu = $('input[name=cpu][id=cpu-yes]')[0].checked;
+        let cpu_input = document.getElementById('model-cpu');
+        let mem = $('input[name=mem][id=mem-yes]')[0].checked;
+        let mem_input = document.getElementById('model-cpu');
+        let upload_data = new FormData();
+        // upload_data.append('version', version.value);
+        upload_data.append('env', env.value);
+        upload_data.append('cpu', cpu);
+        upload_data.append('mem', mem);
+        if (cpu) upload_data.append('cpu_value', cpu_input.value);
+        if (mem) upload_data.append('mem_value', mem_input.value);
+        $.ajax({
+            type: "POST",
+            data: upload_data,
+            dataType: 'json',
+            processData: false,  //tell jQuery not to process the data
+            contentType: false,  //tell jQuery not to set contentType
+            beforeSend: function () {
+                $('#loading').show();
+            },
+            success: function (data) {
+                $('#loading').hide();
+                if (data['code'] == 1000) {
+                    // window.location = '/model/view/'+data['msg'];
+                    alert('部署参数设置成功');
+                } else {
+                    alert('部署参数设置失败');
+                }
+            }
+        });
+    });
+
+    /** 确定按钮 disable or not **/
+    function button_disable_or_not() {
+        if ($('#model-env').val().trim() == ''
+            || ($('input[name=cpu]')[1].checked == true && $('#model-cpu').val().trim() == '')
+            || ($('input[name=mem]')[1].checked == true && $('#model-mem').val().trim() == ''))
+            $('.create').attr('disabled', true);
+        else
+            $('.create').attr('disabled', false);
+    }
+</script>
+{% endblock %}

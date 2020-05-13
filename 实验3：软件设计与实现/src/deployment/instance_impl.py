@@ -4,6 +4,7 @@ import os
 import subprocess
 import yaml
 import re
+from hashlib import md5
 
 base_port = 5001
 port_range = 10000
@@ -13,8 +14,9 @@ CPKT_TEMPLATE_DIR = "/root/model_deployment/model_template/cpkt"
 PB_TEMPLATE_DIR = "/root/model_deployment/model_template/pb"
 H5_TEMPLATE_DIR = "/root/model_deployment/model_template/h5"
 SERVER_MEM = 2000
-MEM_LIMIT_INSTACE_PROGRAM = 512
-MEM_LIMIT_INSTACE_USER = 2560
+MEM_LIMIT_INSTANCE_PROGRAM = 512
+MEM_LIMIT_INSTANCE_USER = 2560
+MEM_LIMIT_INSTANCE = 0
 
 def get_insnum_by_model_id(par):
     return 1
@@ -96,10 +98,12 @@ def deploy_impl(model_id, model_settings_file_path):
         conf = yaml.load(conf_file.read(), Loader=yaml.FullLoader)
         conf_file.close()
         MODEL_TYPE = conf['CURRENT_MODEL_TYPE']
+        MEM_LIMIT_INSTANCE = conf['mem_limit']
     except:
         return 4033
     ### get conf ###
 
+    key = md5((str(time.time())+str(model_id)).encode("utf8")).hexdigest()
     if MODEL_TYPE == "TORCH":
         model_path, model_graph_file_path = conf[MODEL_TYPE]['model_path'], conf[MODEL_TYPE]['model_graph_file_path']
         model_folder = "model_" + str(model_id) + "_" + str(int(time.time()))
@@ -112,7 +116,7 @@ def deploy_impl(model_id, model_settings_file_path):
         ### start deploy ###
         flask_run_file = str(os.path.join("/", "root", "model_deployment", new_folder, "model.py"))
         instance = os.popen("nohup python " + flask_run_file + " " + str(
-            port) + " " + model_path + " >" + model_folder + "_nohup_process.log &")
+            port) + " " + model_path + " " + key + " >" + model_folder + "_nohup_process.log &")
         rc = getRC(model_folder + "_nohup_process.log")
         print("RC", rc)
         if rc == 1:
@@ -131,6 +135,7 @@ def deploy_impl(model_id, model_settings_file_path):
             pid = getPIDByPort(port)
             result["status"] = 0
             result["pid"] = getPIDByPort(port)
+            result["key"] = key
             result["url"] = base_url + str(port) + "/run_model/"
     elif MODEL_TYPE == "CPKT":
         model_dir, model_graph_file_path, input_node_name, output_node_name = conf[MODEL_TYPE]['model_directory'], \
@@ -151,7 +156,7 @@ def deploy_impl(model_id, model_settings_file_path):
         if output_node_name == None:
             output_node_name = ""
         instance = os.popen("nohup python " + flask_run_file + " " + str(
-            port) + " " + model_dir + " " + model_graph_file_path + " " + input_node_name + " " + output_node_name + " >" + model_folder + "_nohup_process.log &")
+            port) + " " + model_dir + " " + model_graph_file_path + " " + key + " " + input_node_name + " " + output_node_name + " >" + model_folder + "_nohup_process.log &")
         rc = getRC(model_folder + "_nohup_process.log")
         print("RC", rc)
         if rc == 1:
@@ -169,6 +174,7 @@ def deploy_impl(model_id, model_settings_file_path):
         else:
             result["status"] = 0
             result["pid"] = getPIDByPort(port)
+            result["key"] = key
             result["url"] = base_url + str(port) + "/run_model/"
     elif MODEL_TYPE == "PB":
         model_path, input_node_name, output_node_name = conf[MODEL_TYPE]['model_path'], \
@@ -187,7 +193,7 @@ def deploy_impl(model_id, model_settings_file_path):
         if output_node_name == None:
             output_node_name = ""
         instance = os.popen("nohup python4tf1 " + flask_run_file + " " + str(
-            port) + " " + model_path + " "  + input_node_name + " " + output_node_name + " >" + model_folder + "_nohup_process.log &")
+            port) + " " + model_path + " " + key + " " + input_node_name + " " + output_node_name + " >" + model_folder + "_nohup_process.log &")
         rc = getRC(model_folder + "_nohup_process.log")
         print("RC", rc)
         if rc == 1:
@@ -205,6 +211,7 @@ def deploy_impl(model_id, model_settings_file_path):
         else:
             result["status"] = 0
             result["pid"] = getPIDByPort(port)
+            result["key"] = key
             result["url"] = base_url + str(port) + "/run_model/"
     elif MODEL_TYPE == "H5":
         model_path = conf[MODEL_TYPE]['model_path']
@@ -217,7 +224,7 @@ def deploy_impl(model_id, model_settings_file_path):
         ### start deploy ###
         flask_run_file = str(os.path.join("/", "root", "model_deployment", new_folder, "model.py"))
         instance = os.popen("nohup python " + flask_run_file + " " + str(
-            port) + " " + model_path  + " >" + model_folder + "_nohup_process.log &")
+            port) + " " + model_path  + " " + key + " >" + model_folder + "_nohup_process.log &")
         rc = getRC(model_folder + "_nohup_process.log")
         print("RC", rc)
         if rc == 1:
@@ -235,6 +242,7 @@ def deploy_impl(model_id, model_settings_file_path):
         else:
             result["status"] = 0
             result["pid"] = getPIDByPort(port)
+            result["key"] = key
             result["url"] = base_url + str(port) + "/run_model/"
     else:
         return 4033
@@ -242,7 +250,7 @@ def deploy_impl(model_id, model_settings_file_path):
     return result
 
 def deploy(model_id, model_settings_file_path, user_pid_list, program_pid_list):
-    if not memoryCheck(user_pid_list, MEM_LIMIT_INSTACE_USER) or not memoryCheck(program_pid_list, MEM_LIMIT_INSTACE_PROGRAM):
+    if not memoryCheck(user_pid_list, MEM_LIMIT_INSTANCE_USER) or not memoryCheck(program_pid_list, MEM_LIMIT_INSTANCE_PROGRAM):
         return 4038
 
     deploy_result = deploy_impl(model_id, model_settings_file_path)
@@ -253,12 +261,20 @@ def deploy(model_id, model_settings_file_path, user_pid_list, program_pid_list):
     except:
         ### 生成实例后的内存限制####
         pid = deploy_result["pid"]
+        if not memoryCheck([pid], MEM_LIMIT_INSTANCE):
+            delete(pid)
+            return 4038
+
         new_user_pid_list = user_pid_list.append(pid)
         new_prog_pid_list = program_pid_list.append(pid)
-        if not memoryCheck(new_user_pid_list, MEM_LIMIT_INSTACE_USER) or not memoryCheck(new_prog_pid_list, MEM_LIMIT_INSTACE_PROGRAM):
+        if not memoryCheck(new_user_pid_list, MEM_LIMIT_INSTANCE_USER) or not memoryCheck(new_prog_pid_list, MEM_LIMIT_INSTANCE_PROGRAM):
             delete(pid)
             return 4038
         else:
+            conf["KEY"] = deploy_result["key"]
+            file_yml = open(model_settings_file_path, "w")
+            yaml.dump(conf, file_yml)
+            file_yml.close()
             return deploy_result
 
 def delete(pid):

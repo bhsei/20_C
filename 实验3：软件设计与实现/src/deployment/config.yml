@@ -13,3 +13,4 @@ PB:
   output_node_name: ~
 H5:
   model_path: /root/model_deployment/model_file/mymodel.h5
+mem_limit: 200

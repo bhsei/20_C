@@ -19,6 +19,9 @@ def model_run():
     ### 使用form_data形式发送POST请求
     ### USER_AUTHENTICATION
     user_key = request.form['key']
+    if user_key != key:
+        response = Response("Wrong key")
+        return response
     #TODO: AUTHENTICATION
     ### DATA_PARSER
     data = request.form['data']
@@ -64,7 +67,7 @@ if __name__ == '__main__':
     ]
     '''
     # 参数个数不匹配
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 4:
         print("RETURN_CODE", 1)
         exit(1)
     port_no = -1
@@ -82,6 +85,7 @@ if __name__ == '__main__':
     if not os.path.exists(model_path):
         print("RETURN_CODE", 4)
         exit(4)
+    key = sys.argv[3]
     load_model(model_path)
     try:
         model.run(host='0.0.0.0', port=port_no)

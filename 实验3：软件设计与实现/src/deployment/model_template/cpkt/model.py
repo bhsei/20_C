@@ -20,6 +20,9 @@ def model_run():
     ### 使用form_data形式发送POST请求
     ### USER_AUTHENTICATION
     user_key = request.form['key']
+    if key != user_key:
+        response = Response("Key Wrong!")
+        return response
     #TODO: AUTHENTICATION
     ### DATA_PARSER
     data = request.form['data']
@@ -109,7 +112,7 @@ if __name__ == '__main__':
     ]
     '''
     # 参数个数不匹配
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 5:
         print("RETURN_CODE", 1)
         exit(1)
     port_no = -1
@@ -131,14 +134,15 @@ if __name__ == '__main__':
     if not os.path.exists(model_graph):
         print("RETURN_CODE", 5)
         exit(5)
+    key = sys.argv[4]
     sess = tf.Session()
     graph = None
     try:
-        input_node_name = sys.argv[4]
+        input_node_name = sys.argv[5]
     except IndexError:
         input_node_name = ""
     try:
-        output_node_name = sys.argv[5]
+        output_node_name = sys.argv[6]
     except IndexError:
         output_node_name = ""
     load_model(model_directory, model_graph, input_node_name, output_node_name)

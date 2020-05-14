@@ -305,7 +305,7 @@ def restart(pid, port):
     port_pid = int(process_result[0].split()[6].split('/')[0])
     if port_pid != pid:
         return False
-    pause_result = os.system("iptables -A INPUT -p tcp --dport {} -j ACCEPT".format(str(port)))
+    pause_result = os.system("iptables -D INPUT -p tcp --dport {} -j DROP".format(str(port)))
     if pause_result != 0:
         return False
     return True

@@ -1,0 +1,10 @@
+/.idea/
+/__pycache__/
+/files/*
+*.log
+nohup.out
+/project/__pycache__/
+/project/*/__pycache__/
+/project/deployment/instance/*
+start.py
+/project/deployment/h5*

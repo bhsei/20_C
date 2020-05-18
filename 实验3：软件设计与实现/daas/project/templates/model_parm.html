@@ -1,0 +1,205 @@
+{% extends 'template.html' %}
+
+{% block import %}
+<link rel="stylesheet" href="/static/bootstrap-select/dist/css/bootstrap-select.min.css">
+<script src="{{ url_for('static', filename = 'bootstrap-select/dist/js/bootstrap-select.js') }}"></script>
+<style>
+    label.required:before {
+        content: '* ';
+        color: red;
+    }
+    .has-feedback label~.form-control-feedback {
+        top: 32px;
+    }
+    .operate-button {
+        margin-top: 4%;
+        margin-bottom: 4%;
+    }
+
+    .operate-button button {
+        display: flex;
+        float: right;
+        margin-right: 5px;
+    }
+
+    .form-error {
+        color: darkred;
+        font-size: smaller;
+    }
+
+    div.form-inline div.radio.radio-no {
+        margin-left: 5%;
+        width: 20%;
+    }
+
+    div.form-inline div.input-group {
+        width: 45%;
+    }
+</style>
+{% endblock %}
+
+{% block content_head %} 设置部署参数 {% endblock %}
+{% block content_inner %}
+<form style="width: 60%">
+
+    <!--div class="form-group">
+        <label class="required" for="model-env">网络服务运行环境</label>
+        <select class="form-control selectpicker" data-live-search="true" id="model-env" title="选择：网络服务运行环境">
+            <option>TensorFlow</option>
+            <option>Pytorch</option>
+        </select>
+    </div-->
+
+    <div class="form-group">
+        <label class="required" for="model-type">模型类型</label>
+        <input type="text" class="form-control" id="model-type" required readonly>
+    </div>
+
+    <div class="form-group">
+        <label class="required" for="model-in-node">输入节点</label>
+        <input type="text" class="form-control" id="model-in-node" placeholder="必填：输入节点" required>
+    </div>
+
+    <div class="form-group">
+        <label class="required" for="model-out-node">输出节点</label>
+        <input type="text" class="form-control" id="model-out-node" placeholder="必填：输出节点" required>
+    </div>
+
+    <div class="form-group">
+        <label class="required" for="model-mem">预留内存</label>
+        <div class="form-inline">
+            <div class="radio radio-no">
+                <label>
+                    <input type="radio" name="mem" id="mem-no" value="no" checked>
+                    使用默认内存
+                </label>
+            </div>
+            <div class="radio radio-yes">
+                <label>
+                    <input type="radio" name="mem" id="mem-yes" value="yes">
+                    自定义内存大小：
+                </label>
+            </div>
+            <div class="input-group">
+                <input type="text" class="form-control" id="model-mem" placeholder="请填写预留内存大小"
+                       oninput="value=value.replace(/[^\d]/g,'')" disabled required>
+                <span class="input-group-addon">MB</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="operate-button">
+        <button type="button" class="btn btn-primary create" disabled="disabled">确定</button>
+        <button type="button" class="btn btn-default cancel">取消</button>
+    </div>
+</form>
+<!-- 转圈动画 -->
+<div id="loading" class="submit_loading" style="display:none">
+    <div class="loading_show">
+        <img src="/static/image/loading.gif">
+        <p class="loading_context">正在设置部署参数，请稍候。。。</p>
+    </div>
+</div>
+<script>
+    let nav_list = ['首页', '项目', '查看项目', '查看模型', '设置部署参数'];
+    let href_list = ['/project/', '/project/', '#', '/model/view/' + location.href.split('/').pop()];
+    let res = {{ res | safe }};
+    $(function () {
+        load_nav(nav_list, href_list);
+        $('#model-type').val(res['type']);
+        $('#model-in-node').val(res['input']);
+        $('#model-out-node').val(res['output']);
+        if(parseInt(res['memory'])!=0){
+            $('#model-mem').attr('disabled', false);
+            $('input#mem-yes').click();
+            $('#model-mem').val(res['memory']);
+        }
+        if (res['type'] != 'CPKT' && res['type'] != 'PB') {
+            $('#model-in-node').closest('div.form-group').remove();
+            $('#model-out-node').closest('div.form-group').remove();
+        }
+        button_disable_or_not();
+    });
+    /** 单选框.change **/
+    $('input[name=mem]').change(function () {
+        if (this.value == 'yes') {
+            $(this.closest('div.form-inline').querySelector('input[type=text]')).attr('disabled', false);
+        } else if (this.value == 'no') {
+            $(this.closest('div.form-inline').querySelector('input[type=text]')).attr('disabled', true);
+        } else {
+            alert('input radio value error.');
+        }
+        button_disable_or_not();
+    });
+    /** 文本框.blur **/
+    $("#model-in-node, #model-out-node").blur(function () {
+        // 先清空所有的span元素
+        clear_error_feedback(this, 'div.form-group');
+        // 校验
+        let value = $(this).val().trim();
+        if (value == "") {
+            let error_msg = "不可为空";
+            set_error_feedback(this, 'div.form-group', error_msg);
+        }
+        button_disable_or_not();
+    });
+    /** 选择框and文本框.change **/
+    $('#model-in-node, #model-out-node, #model-mem').on('change', function () {
+        clear_error_feedback(this, 'div.form-group');
+        button_disable_or_not();
+    });
+    $('.cancel').click(function () {
+        window.history.back(-1);
+    });
+    $('.create').click(function () {
+        // 开始传递表单内容
+        let mem = $('input[name=mem][id=mem-yes]')[0].checked;
+        let memory = document.getElementById('model-mem').value;
+        let input = '', output = '';
+        if (['CPKT', 'PB'].indexOf(res['type']) != -1) {
+            input = document.getElementById('model-in-node').value;
+            output = document.getElementById('model-out-node').value;
+        }
+
+        let upload_data = new FormData();
+        upload_data.append('mem', mem);
+        if (mem) upload_data.append('memory', memory);
+        upload_data.append('input', input);
+        upload_data.append('output', output);
+        console.log(upload_data)
+        $.ajax({
+            type: "POST",
+            data: upload_data,
+            dataType: 'json',
+            processData: false,  //tell jQuery not to process the data
+            contentType: false,  //tell jQuery not to set contentType
+            timeout: 10000,
+            beforeSend: function () {
+                $('#loading').show();
+            },
+            success: function (res) {
+                $('#loading').hide();
+                if (res['code'] == 1000) {
+                    let id = location.href.split('/').pop();
+                    location.href = '/model/view/' + id;
+                } else {
+                    alert(res['msg']);
+                }
+            },
+            error: function () {
+                $('#loading').hide();
+                alert("请求超时，请重试。");
+            }
+        });
+    });
+
+    /** 确定按钮 disable or not **/
+    function button_disable_or_not() {
+        if ((['CPKT', 'PB'].indexOf(res['type']) != -1 && ($('#model-in-node').val().trim() == '' || $('#model-out-node').val().trim() == ''))
+            || ($('input[name=mem]')[1].checked == true && $('#model-mem').val().trim() == ''))
+            $('.create').attr('disabled', true);
+        else
+            $('.create').attr('disabled', false);
+    }
+</script>
+{% endblock %}

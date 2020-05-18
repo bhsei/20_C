@@ -1,0 +1,305 @@
+{% extends 'template.html' %}
+
+{% block import %}
+<style>
+    .page-header {
+        margin-top: 0;
+    }
+
+    td.field {
+        width: 30%;
+    }
+
+    .btn {
+        margin-right: 5px;
+    }
+
+    .progress {
+        margin: 0;
+    }
+
+    .clipboard {
+        cursor: pointer;
+        text-decoration: unset;
+    }
+    span.nothing {
+        color: grey;
+    }
+    a.edit {
+        cursor: pointer;
+    }
+    .sp-circle {
+        display: none;
+        width: 33px;
+        height: 33px;
+        border: 4px rgba(0, 0, 0, 0.25) solid;
+        border-top: 4px black solid;
+        border-radius: 50%;
+        -webkit-animation: spCircRot .6s infinite linear;
+        animation: spCircRot .6s infinite linear;
+    }
+    @-webkit-keyframes spCircRot {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
+        to {
+            -webkit-transform: rotate(359deg);
+        }
+    }
+    @keyframes spCircRot {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(359deg);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content_head %} 查看模型 {% endblock %}
+{% block content_inner %}
+<div class="pure-g">
+    <div id="basic_info" class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
+        <h3 class="page-header">
+            基本信息
+            <!--small><a class="edit" title="修改"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></small-->
+        </h3>
+        <table class="table table-bordered table-hover" style="display: table;">
+            <tbody>
+            <tr>
+                <td class="field"><strong>名称</strong></td>
+                <td class="value"></td>
+            </tr>
+            <tr>
+                <td class="field"><strong>类型</strong></td>
+                <td class="value"></td>
+            </tr>
+            <tr>
+                <td class="field"><strong>版本</strong></td>
+                <td class="value"></td>
+            </tr>
+            <tr>
+                <td class="field"><strong>描述</strong></td>
+                <td class="value"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="deploy_info" class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
+        <h3 class="page-header">
+            部署信息
+            <small><a class="edit" title="添加或修改"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></small>
+        </h3>
+        <table class="table table-bordered table-hover" style="display: table;">
+            <tbody>
+            <tr>
+                <td class="field"><strong>网络服务运行环境</strong></td>
+                <td class="value"></td>
+            </tr>
+            <tr>
+                <td class="field"><strong>预留内存</strong></td>
+                <td class="value"></td>
+            </tr>
+            <tr>
+                <td class="field"><strong>URL</strong></td>
+                <td class="value"></td>
+            </tr>
+            <tr>
+                <td class="field"><strong>KEY</strong></td>
+                <td class="value"></td>
+            </tr>
+            <tr>
+                <td class="field"><strong>状态</strong></td>
+                <td class="value"></td>
+            </tr>
+            <tr>
+                <td class="field"><strong>操作</strong></td>
+                <td class="value" style="display: flex"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let model_data = {{ model_info | safe }};
+    let nav_list = ['首页', '项目', '查看项目', '查看模型'];
+    let href_list = ['/project/', '/project/', '/project/view/' + model_data['basic']['pid']];
+    $(function () {
+        load_nav(nav_list, href_list);
+        load_basic_info(model_data['basic']);
+        load_deploy_info(model_data['deploy']);
+    });
+    $('#basic_info a.edit').on('click', function () {
+        //
+    });
+    $('#deploy_info a.edit').on('click', function () {
+        let id = location.href.split('/').pop();
+        location.href = '/model/editParam/' + id;
+    });
+    function load_basic_info(data) {
+        let value_list = $('#basic_info table td.value');
+        value_list[0].innerText = data['name'];
+        value_list[1].innerText = data['type'];
+        value_list[2].innerText = data['version'];
+        if (data['description'] == '') {
+            value_list[3].innerHTML = "<span class='nothing'>暂无描述</span>";
+        } else {
+            value_list[3].innerHTML = "<span>" + data['description'] + "</span>";
+        }
+    }
+    function load_deploy_info(data) {
+        let value_list = $('#deploy_info table td.value');
+        value_list[0].innerHTML = '<img style="width: 90px" src="https://img.alicdn.com/tfs/TB1Ly5oS3HqK1RjSZFPXXcwapXa-238-54.png" class="aliyun-logo-image">';
+        value_list[1].innerHTML = data['mem'] == '' ? "使用默认内存" : data['mem']+"MB";
+        value_list[2].innerHTML = data['url'] == '' ? "<span class='nothing'>未部署，不可用</span>" :
+            data['url'] + "<a class=\"clipboard\">&nbsp;" +
+            "<i class=\"fa fa-clipboard\" aria-hidden=\"true\"></i>点击复制</a>";
+        value_list[3].innerHTML = data['key'] == '' ? "<span class='nothing'>未部署，不可用</span>" : data['key'];
+        if (parseInt(data['state']) == 0) {
+            value_list[4].innerHTML = '未部署';
+            value_list[5].innerHTML = "<button id=\"start\" class=\"btn btn-primary\">启动实例</button>";
+        } else if (parseInt(data['state']) == 1) {
+            value_list[4].innerHTML = '已部署，运行中' +
+                "<div class=\"progress\">" +
+                "<div class=\"progress-bar progress-bar-success progress-bar-striped active\" style=\"width: 100%\"></div>" +
+                "</div>";
+            value_list[5].innerHTML = "<button id=\"pause\" class=\"btn btn-warning\">暂停实例</button>" +
+                "<button id=\"delete\" class=\"btn btn-danger\">删除实例</button>";
+        } else if (parseInt(data['state']) == 2) {
+            value_list[4].innerHTML = '已部署，暂停中' +
+                "<div class=\"progress\">" +
+                "<div class=\"progress-bar progress-bar-warning progress-bar-striped \" style=\"width: 100%\"></div>" +
+                "</div>";
+            value_list[5].innerHTML = "<button id=\"restart\" class=\"btn btn-success\">恢复实例</button>" +
+                "<button id=\"delete\" class=\"btn btn-danger\">删除实例</button>";
+        }
+        value_list[5].innerHTML += "<div class=\"sp sp-circle\" id=\"load\"></div>";
+        $('.clipboard').on('click', function () {
+            let input = document.createElement('input');
+            input.setAttribute('value', data['url']);
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+        });
+        $('#start').on('click', function () {
+            let id = location.href.split('/').pop();
+            let button = $(this);
+            $.ajax({
+                url: '/record/startModel/',
+                type: "POST",
+                data: {'model_id': id},
+                dataType: 'json',
+                timeout: 10000,
+                beforeSend: function () {
+                    button.attr('disabled', true);
+                    $('#load').show();
+                },
+                success: function (res) {
+                    button.attr('disabled', false);
+                    $('#load').hide();
+                    if (res['code'] == 1000) {
+                        location.reload();
+                    } else {
+                        alert(res['msg'])
+                    }
+                },
+                error: function () {
+                    button.attr('disabled', false);
+                    $('#load').hide();
+                    alert("服务器超时，请重试。");
+                }
+            });
+        });
+        $('#pause').on('click', function () {
+            let id = location.href.split('/').pop();
+            let button = $(this);
+            $.ajax({
+                url: '/record/pauseModel/',
+                type: "POST",
+                data: {'model_id': id},
+                dataType: 'json',
+                timeout: 10000,
+                beforeSend: function () {
+                    button.attr('disabled', true);
+                    $('#load').show();
+                },
+                success: function (res) {
+                    button.attr('disabled', false);
+                    $('#load').hide();
+                    if (res['code'] == 1000) {
+                        location.reload();
+                    } else {
+                        alert(res['msg'])
+                    }
+                },
+                error: function () {
+                    button.attr('disabled', false);
+                    $('#load').hide();
+                    alert("服务器超时，请重试。");
+                }
+            });
+        });
+        $('#restart').on('click', function () {
+            let id = location.href.split('/').pop();
+            let button = $(this);
+            $.ajax({
+                url: '/record/restartModel/',
+                type: "POST",
+                data: {'model_id': id},
+                dataType: 'json',
+                timeout: 10000,
+                beforeSend: function () {
+                    button.attr('disabled', true);
+                    $('#load').show();
+                },
+                success: function (res) {
+                    button.attr('disabled', false);
+                    $('#load').hide();
+                    if (res['code'] == 1000) {
+                        location.reload();
+                    } else {
+                        alert(res['msg'])
+                    }
+                },
+                error: function () {
+                    button.attr('disabled', false);
+                    $('#load').hide();
+                    alert("服务器超时，请重试。");
+                }
+            });
+        });
+        $('#delete').on('click', function () {
+            let id = location.href.split('/').pop();
+            let button = $(this);
+            $.ajax({
+                url: '/record/deleteRecord/',
+                type: "POST",
+                data: {'model_id': id},
+                dataType: 'json',
+                timeout: 10000,
+                beforeSend: function () {
+                    button.attr('disabled', true);
+                    $('#load').show();
+                },
+                success: function (res) {
+                    button.attr('disabled', false);
+                    $('#load').hide();
+                    if (res['code'] == 1000) {
+                        location.reload();
+                    } else {
+                        alert(res['msg'])
+                    }
+                },
+                error: function () {
+                    button.attr('disabled', false);
+                    $('#load').hide();
+                    alert("服务器超时，请重试。");
+                }
+            });
+        })
+    }
+</script>
+{% endblock %}

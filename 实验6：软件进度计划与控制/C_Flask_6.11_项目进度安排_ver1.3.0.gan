@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="2020软件工程综合实验C组" company="北京航空航天大学" webLink="" view-date="2020-05-03" view-index="0" gantt-divider-location="815" resource-divider-location="300" version="2.8.10" locale="zh_CN">
+<?xml version="1.0" encoding="UTF-8"?><project name="2020软件工程综合实验C组" company="北京航空航天大学" webLink="" view-date="2020-04-19" view-index="0" gantt-divider-location="815" resource-divider-location="300" version="2.8.10" locale="zh_CN">
     <description/>
-    <view zooming-state="default:5" id="gantt-chart">
+    <view zooming-state="default:6" id="gantt-chart">
         <field id="tpd10" name="序号" width="39" order="0"/>
         <field id="tpd3" name="名称" width="211" order="1"/>
         <field id="tpd9" name="前置任务" width="66" order="2"/>
@@ -8,7 +8,7 @@
         <field id="tpd4" name="开始日期" width="160" order="4"/>
         <field id="tpd5" name="结束日期" width="140" order="5"/>
         <field id="tpd6" name="持续" width="56" order="6"/>
-        <timeline><![CDATA[1,2]]></timeline>
+        <timeline><![CDATA[2,1]]></timeline>
     </view>
     <view id="resource-table">
         <field id="0" name="名称" width="210" order="0"/>

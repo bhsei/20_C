@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="2020软件工程综合实验C组" company="北京航空航天大学" webLink="" view-date="2020-05-03" view-index="0" gantt-divider-location="855" resource-divider-location="300" version="2.8.10" locale="zh_CN">
+<?xml version="1.0" encoding="UTF-8"?><project name="2020软件工程综合实验C组" company="北京航空航天大学" webLink="" view-date="2020-05-03" view-index="0" gantt-divider-location="815" resource-divider-location="300" version="2.8.10" locale="zh_CN">
     <description/>
     <view zooming-state="default:5" id="gantt-chart">
-        <field id="tpd10" name="序号" width="40" order="0"/>
-        <field id="tpd3" name="名称" width="222" order="1"/>
-        <field id="tpd9" name="前置任务" width="67" order="2"/>
-        <field id="tpd13" name="资源" width="234" order="3"/>
-        <field id="tpd4" name="开始日期" width="110" order="4"/>
-        <field id="tpd5" name="结束日期" width="102" order="5"/>
-        <field id="tpd6" name="持续" width="61" order="6"/>
+        <field id="tpd10" name="序号" width="39" order="0"/>
+        <field id="tpd3" name="名称" width="211" order="1"/>
+        <field id="tpd9" name="前置任务" width="66" order="2"/>
+        <field id="tpd13" name="资源" width="124" order="3"/>
+        <field id="tpd4" name="开始日期" width="160" order="4"/>
+        <field id="tpd5" name="结束日期" width="140" order="5"/>
+        <field id="tpd6" name="持续" width="56" order="6"/>
         <timeline><![CDATA[1,2]]></timeline>
     </view>
     <view id="resource-table">
@@ -1073,12 +1073,25 @@
             </task>
             <task id="98" name="测试评审第二轮" color="#8cb6ce" meeting="false" start="2020-05-25" duration="5" complete="0" thirdDate="2020-03-01" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="true">
                 <depend id="102" type="2" difference="0" hardness="Rubber"/>
+                <depend id="131" type="2" difference="0" hardness="Rubber"/>
             </task>
-            <task id="102" name="组间互评" color="#8cb6ce" meeting="false" start="2020-05-31" duration="4" complete="0" thirdDate="2020-03-22" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="true"/>
+            <task id="102" name="组间互评" color="#8cb6ce" meeting="false" start="2020-05-31" duration="4" complete="0" thirdDate="2020-03-22" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="true">
+                <depend id="127" type="2" difference="0" hardness="Rubber"/>
+            </task>
         </task>
-        <task id="50" name="综合实验分析与总结" color="#8cb6ce" meeting="false" start="2020-06-05" duration="7" complete="0" thirdDate="2020-03-01" thirdDate-constraint="0" expand="true"/>
-        <task id="89" name="软件演示与测评" color="#8cb6ce" meeting="false" start="2020-06-13" duration="6" complete="0" thirdDate="2020-03-22" thirdDate-constraint="0" expand="true"/>
-        <task id="18" name="软件项目计划与监控" color="#000000" meeting="false" start="2020-03-09" duration="95" complete="3" expand="true" cost-manual-value="0.0" cost-calculated="false">
+        <task id="50" name="综合实验分析与总结" color="#8cb6ce" meeting="false" start="2020-06-05" duration="7" complete="0" thirdDate="2020-03-01" thirdDate-constraint="0" expand="true">
+            <task id="127" name="个人总结" color="#8cb6ce" meeting="false" start="2020-06-05" duration="5" complete="0" thirdDate="2020-05-03" thirdDate-constraint="0" expand="true">
+                <depend id="130" type="2" difference="0" hardness="Rubber"/>
+            </task>
+            <task id="130" name="团队任务总结" color="#8cb6ce" meeting="false" start="2020-06-10" duration="2" complete="0" thirdDate="2020-05-03" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="89" name="软件演示与测评" color="#8cb6ce" meeting="false" start="2020-06-13" duration="7" complete="0" thirdDate="2020-03-22" thirdDate-constraint="0" expand="true">
+            <task id="131" name="演示准备" color="#8cb6ce" meeting="false" start="2020-06-13" duration="5" complete="0" thirdDate="2020-05-03" thirdDate-constraint="0" expand="true">
+                <depend id="132" type="2" difference="0" hardness="Rubber"/>
+            </task>
+            <task id="132" name="正式演示" color="#8cb6ce" meeting="false" start="2020-06-19" duration="1" complete="0" thirdDate="2020-05-03" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="18" name="进度计划与控制" color="#000000" meeting="false" start="2020-03-09" duration="95" complete="3" thirdDate="2020-03-09" thirdDate-constraint="0" expand="true" cost-manual-value="0.0" cost-calculated="false">
             <customproperty taskproperty-id="tpc150" value="false"/>
             <customproperty taskproperty-id="tpc151" value="false"/>
             <customproperty taskproperty-id="tpc152" value="false"/>
@@ -1638,6 +1651,10 @@
         <allocation task-id="102" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="109" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="124" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="127" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="130" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="131" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="132" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="2" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="4" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="5" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
@@ -1660,6 +1677,9 @@
         <allocation task-id="111" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="108" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="113" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="127" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="131" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="132" resource-id="2" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="2" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="8" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="11" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
@@ -1670,13 +1690,14 @@
         <allocation task-id="60" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="28" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="78" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="76" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="79" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="98" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="109" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="111" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="108" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="113" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="127" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="76" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="2" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="8" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="11" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
@@ -1696,6 +1717,9 @@
         <allocation task-id="111" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="108" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="113" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="127" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="131" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="132" resource-id="4" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="2" resource-id="5" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="3" resource-id="5" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="5" resource-id="5" function="Default:0" responsible="false" load="100.0"/>
@@ -1717,6 +1741,7 @@
         <allocation task-id="109" resource-id="5" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="125" resource-id="5" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="126" resource-id="5" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="127" resource-id="5" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="2" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="8" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="12" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
@@ -1733,6 +1758,8 @@
         <allocation task-id="111" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="108" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="113" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="127" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="76" resource-id="6" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="2" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="8" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="11" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
@@ -1742,7 +1769,6 @@
         <allocation task-id="60" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="55" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="78" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="76" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="80" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="98" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="102" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
@@ -1750,6 +1776,10 @@
         <allocation task-id="111" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="108" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="113" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="127" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="131" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="132" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="76" resource-id="7" function="Default:0" responsible="false" load="100.0"/>
     </allocations>
     <vacations/>
     <previous>
